@@ -35,9 +35,9 @@ class OctopusApplication(Adw.Application):
                          flags=Gio.ApplicationFlags.DEFAULT_FLAGS)
         self.create_action('quit', lambda *_: self.quit(), ['<primary>q'])
         self.create_action('about', self.on_about_action, ['<primary>a'])
-        self.create_action('preferences', self.on_preferences_action)
+        self.create_action('search', self.on_search_1, ['<primary>s'])
 
-        self.set_accels_for_action('app.search', ['<primary>s'])
+        self.window = None
 
     def do_activate(self):
         """Called when the application is activated.
@@ -45,25 +45,29 @@ class OctopusApplication(Adw.Application):
         We raise the application's main window, creating it if
         necessary.
         """
-        win = self.props.active_window
-        if not win:
-            win = OctopusWindow(application=self)
-        win.present()
+        if not self.window:
+            self.window = OctopusWindow(application=self)
+        self.window.present()
 
     def on_about_action(self, widget, _):
         """Callback for the app.about action."""
-        about = Adw.AboutWindow(transient_for=self.props.active_window,
+        about = Adw.AboutWindow(transient_for=self.window,
                                 application_name='octopus',
                                 application_icon='com.octopus.octopus',
-                                developer_name='Ravshan Zaripov',
+                                developer_name='System Programming Project',
                                 version='0.1.0',
-                                developers=['Ravshan Zaripov'],
+                                developers=['Ravshan Zaripov', 'Bobir Ibragimov', 'Akbar Aminov'],
                                 copyright='© 2024 Ravshan Zaripov')
         about.present()
 
     def on_preferences_action(self, widget, _):
         """Callback for the app.preferences action."""
         print('app.preferences action activated')
+
+    def on_search_1(self, widget, _):
+        if self.window:
+            self.window.status_page_on_seach_1()
+        print('app.search action activated')
 
     def create_action(self, name, callback, shortcuts=None):
         """Add an application action.

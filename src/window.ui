@@ -11,16 +11,20 @@
     <property name="width-request">460</property>
     <property name="title">Files</property>
 
-    <!-- AdwBreakpoint -->
+    <!-- Search Widget -->
     <child>
-      <object class="AdwBreakpoint">
-        <condition>max-width: 400sp</condition>
-        <setter object="split_view" property="collapsed">True</setter>
+      <object class="AdwClamp" id="search_widget">
+        <property name="maximum-size">400</property>
+        <property name="child">
+          <object class="GtkSearchEntry">
+            <property name="placeholder-text">Search everywhere</property>
+          </object>
+        </property>
       </object>
     </child>
 
     <property name="content">
-      <object class="AdwOverlaySplitView" id="split_view">
+      <object class="AdwOverlaySplitView">
         <property name="max-sidebar-width">220</property>
 
         <!-- Sidebar -->
@@ -34,7 +38,7 @@
 
                     <!-- SearchButton -->
                     <child type="start">
-                      <object class="GtkButton" id="search">
+                      <object class="GtkButton">
                         <property name="action-name">app.search</property>
                         <property name="has-frame">no</property>
                         <property name="icon-name">system-search-symbolic</property>
@@ -62,7 +66,7 @@
 
                     <!-- Home -->
                     <child>
-                      <object class="GtkButton" id="home">
+                      <object class="GtkButton">
                         <property name="action-name">app.home</property>
                         <property name="has-frame">no</property>
                         <property name="child">
@@ -79,7 +83,7 @@
 
                     <!-- Documents -->
                     <child>
-                      <object class="GtkButton" id="documents">
+                      <object class="GtkButton">
                         <property name="action-name">app.documents</property>
                         <property name="has-frame">no</property>
                         <property name="child">
@@ -96,7 +100,7 @@
 
                     <!-- Downloads -->
                     <child>
-                      <object class="GtkButton" id="downloads">
+                      <object class="GtkButton">
                         <property name="action-name">app.downloads</property>
                         <property name="has-frame">no</property>
                         <property name="child">
@@ -113,7 +117,7 @@
 
                     <!-- Music -->
                     <child>
-                      <object class="GtkButton" id="music">
+                      <object class="GtkButton">
                         <property name="action-name">app.music</property>
                         <property name="has-frame">no</property>
                         <property name="child">
@@ -130,7 +134,7 @@
 
                     <!-- Pictures -->
                     <child>
-                      <object class="GtkButton" id="pictures">
+                      <object class="GtkButton">
                         <property name="action-name">app.pictures</property>
                         <property name="has-frame">no</property>
                         <property name="child">
@@ -147,7 +151,7 @@
 
                     <!-- Videos -->
                     <child>
-                      <object class="GtkButton" id="videos">
+                      <object class="GtkButton">
                         <property name="action-name">app.videos</property>
                         <property name="has-frame">no</property>
                         <property name="child">
@@ -172,7 +176,7 @@
 
                     <!-- Trash -->
                     <child>
-                      <object class="GtkButton" id="trash">
+                      <object class="GtkButton">
                         <property name="action-name">app.trash</property>
                         <property name="has-frame">no</property>
                         <property name="child">

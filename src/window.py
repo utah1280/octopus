@@ -24,5 +24,18 @@ from gi.repository import Gtk
 class OctopusWindow(Adw.ApplicationWindow):
     __gtype_name__ = 'OctopusWindow'
 
+    # Widgets
+    header_bar = Gtk.Template.Child()
+    status_page = Gtk.Template.Child()
+    search_widget = Gtk.Template.Child()
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+
+    def status_page_on_seach_1(self):
+        self.status_page.set_title('Search Everywhere')
+        self.status_page.set_description('Find files and folders in all search locations')
+        self.status_page.set_icon_name('folder-saved-search-symbolic')
+
+        self.header_bar.set_show_title('yes')
+        self.header_bar.set_title_widget(self.search_widget)
