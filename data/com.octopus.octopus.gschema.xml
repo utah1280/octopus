@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist gettext-domain="octopus">
+	<schema id="com.octopus.octopus" path="/com/octopus/octopus/">
+	</schema>
+</schemalist>

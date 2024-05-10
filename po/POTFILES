@@ -1,0 +1,6 @@
+data/com.octopus.octopus.desktop.in
+data/com.octopus.octopus.metainfo.xml.in
+data/com.octopus.octopus.gschema.xml
+src/main.py
+src/window.py
+src/window.ui
