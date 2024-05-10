@@ -66,7 +66,7 @@
 
                     <!-- Home -->
                     <child>
-                      <object class="GtkButton">
+                      <object class="GtkButton" id="home_button">
                         <property name="action-name">app.home</property>
                         <property name="has-frame">no</property>
                         <property name="child">
@@ -83,7 +83,7 @@
 
                     <!-- Documents -->
                     <child>
-                      <object class="GtkButton">
+                      <object class="GtkButton" id="documents_button">
                         <property name="action-name">app.documents</property>
                         <property name="has-frame">no</property>
                         <property name="child">
@@ -91,7 +91,6 @@
                             <property name="halign">1</property>
                             <property name="margin-start">10</property>
                             <property name="icon-name">folder-documents-symbolic</property>
-                            <property name="tooltip-text" translatable="true">TODO!</property>
                             <property name="label" translatable="yes">Documents</property>
                           </object>
                         </property>
@@ -100,7 +99,7 @@
 
                     <!-- Downloads -->
                     <child>
-                      <object class="GtkButton">
+                      <object class="GtkButton" id="downloads_button">
                         <property name="action-name">app.downloads</property>
                         <property name="has-frame">no</property>
                         <property name="child">
@@ -108,7 +107,6 @@
                             <property name="halign">1</property>
                             <property name="margin-start">10</property>
                             <property name="icon-name">folder-download-symbolic</property>
-                            <property name="tooltip-text" translatable="true">TODO!</property>
                             <property name="label" translatable="yes">Downloads</property>
                           </object>
                         </property>
@@ -117,7 +115,7 @@
 
                     <!-- Music -->
                     <child>
-                      <object class="GtkButton">
+                      <object class="GtkButton" id="music_button">
                         <property name="action-name">app.music</property>
                         <property name="has-frame">no</property>
                         <property name="child">
@@ -125,7 +123,6 @@
                             <property name="halign">1</property>
                             <property name="margin-start">10</property>
                             <property name="icon-name">folder-music-symbolic</property>
-                            <property name="tooltip-text" translatable="true">TODO!</property>
                             <property name="label" translatable="yes">Music</property>
                           </object>
                         </property>
@@ -134,7 +131,7 @@
 
                     <!-- Pictures -->
                     <child>
-                      <object class="GtkButton">
+                      <object class="GtkButton" id="pictures_button">
                         <property name="action-name">app.pictures</property>
                         <property name="has-frame">no</property>
                         <property name="child">
@@ -142,7 +139,6 @@
                             <property name="halign">1</property>
                             <property name="margin-start">10</property>
                             <property name="icon-name">folder-pictures-symbolic</property>
-                            <property name="tooltip-text" translatable="true">TODO!</property>
                             <property name="label" translatable="yes">Pictures</property>
                           </object>
                         </property>
@@ -151,7 +147,7 @@
 
                     <!-- Videos -->
                     <child>
-                      <object class="GtkButton">
+                      <object class="GtkButton" id="videos_button">
                         <property name="action-name">app.videos</property>
                         <property name="has-frame">no</property>
                         <property name="child">
@@ -159,7 +155,6 @@
                             <property name="halign">1</property>
                             <property name="margin-start">10</property>
                             <property name="icon-name">folder-videos-symbolic</property>
-                            <property name="tooltip-text" translatable="true">TODO!</property>
                             <property name="label" translatable="yes">Videos</property>
                           </object>
                         </property>
@@ -176,7 +171,7 @@
 
                     <!-- Trash -->
                     <child>
-                      <object class="GtkButton">
+                      <object class="GtkButton" id="trash_button">
                         <property name="action-name">app.trash</property>
                         <property name="has-frame">no</property>
                         <property name="child">
@@ -184,7 +179,7 @@
                             <property name="halign">1</property>
                             <property name="margin-start">10</property>
                             <property name="icon-name">user-trash-symbolic</property>
-                            <property name="tooltip-text" translatable="true">TODO!</property>
+                            <property name="tooltip-text" translatable="true">Open Trash</property>
                             <property name="label" translatable="yes">Trash</property>
                           </object>
                         </property>

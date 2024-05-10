@@ -17,8 +17,14 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+import os
+
 from gi.repository import Adw
 from gi.repository import Gtk
+
+# Explorer always starts with the home directory
+def get_home_directory():
+    return os.path.expanduser("~")
 
 @Gtk.Template(resource_path='/com/octopus/octopus/window.ui')
 class OctopusWindow(Adw.ApplicationWindow):
@@ -26,9 +32,17 @@ class OctopusWindow(Adw.ApplicationWindow):
 
     # Helpers
     search_active = False
+    home_path = get_home_directory()
 
     # Buttons
     search_button = Gtk.Template.Child()
+    home_button = Gtk.Template.Child()
+    documents_button = Gtk.Template.Child()
+    downloads_button = Gtk.Template.Child()
+    music_button = Gtk.Template.Child()
+    pictures_button = Gtk.Template.Child()
+    videos_button = Gtk.Template.Child()
+    trash_button = Gtk.Template.Child()
 
     # Widgets
     header_bar = Gtk.Template.Child()
@@ -38,6 +52,12 @@ class OctopusWindow(Adw.ApplicationWindow):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
+        self.documents_button.set_tooltip_text(self.home_path + "/Documents")
+        self.downloads_button.set_tooltip_text(self.home_path + "/Documents")
+        self.music_button.set_tooltip_text(self.home_path + "/Music")
+        self.pictures_button.set_tooltip_text(self.home_path + "/Pictures")
+        self.videos_button.set_tooltip_text(self.home_path + "/Videos")
+
     def status_page_on_search(self):
         if self.search_active:
             self.status_page.set_title('Empty folder')
@@ -45,6 +65,7 @@ class OctopusWindow(Adw.ApplicationWindow):
             self.status_page.set_icon_name('folder-symbolic')
 
             self.search_button.set_icon_name('system-search-symbolic')
+            self.search_button.set_tooltip_text('Search Everywhere')
 
             self.header_bar.set_show_title(False)
             self.header_bar.set_title_widget(None)
@@ -55,8 +76,8 @@ class OctopusWindow(Adw.ApplicationWindow):
             self.status_page.set_description('Find files and folders in all search locations')
             self.status_page.set_icon_name('folder-saved-search-symbolic')
 
-            self.search_button.set_has_frame(True)
             self.search_button.set_icon_name('folder-drag-accept-symbolic')
+            self.search_button.set_tooltip_text('Files')
 
             self.header_bar.set_show_title(True)
             self.header_bar.set_title_widget(self.search_widget)

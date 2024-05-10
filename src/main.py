@@ -36,6 +36,13 @@ class OctopusApplication(Adw.Application):
         self.create_action('quit', lambda *_: self.quit(), ['<primary>q'])
         self.create_action('about', self.on_about_action, ['<primary>a'])
         self.create_action('search', self.on_search, ['<primary>s'])
+        self.create_action('home', self.on_home)
+        self.create_action('documents', self.on_documents)
+        self.create_action('downloads', self.on_downloads)
+        self.create_action('music', self.on_music)
+        self.create_action('pictures', self.on_pictures)
+        self.create_action('videos', self.on_videos)
+        self.create_action('trash', self.on_trash)
 
         self.window = None
 
@@ -67,6 +74,27 @@ class OctopusApplication(Adw.Application):
     def on_search(self, widget, _):
         if self.window:
             self.window.status_page_on_search()
+
+    def on_home(self, widget, _):
+        pass
+
+    def on_documents(self, widget, _):
+        pass
+
+    def on_downloads(self, widget, _):
+        pass
+
+    def on_music(self, widget, _):
+        pass
+
+    def on_pictures(self, widget, _):
+        pass
+
+    def on_videos(self, widget, _):
+        pass
+
+    def on_trash(self, widget, _):
+        pass
 
     def create_action(self, name, callback, shortcuts=None):
         """Add an application action.
