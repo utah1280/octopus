@@ -38,7 +38,7 @@
 
                     <!-- SearchButton -->
                     <child type="start">
-                      <object class="GtkButton">
+                      <object class="GtkButton" id="search_button">
                         <property name="action-name">app.search</property>
                         <property name="has-frame">no</property>
                         <property name="icon-name">system-search-symbolic</property>
@@ -204,7 +204,7 @@
           <object class="AdwNavigationPage">
             <property name="title">None</property>
             <property name="child">
-              <object class="AdwToolbarView">
+              <object class="AdwToolbarView" id="toolbar_view">
                 <child type="top">
                   <object class="AdwHeaderBar" id="header_bar">
                     <property name="show-title">no</property>

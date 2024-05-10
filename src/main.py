@@ -35,7 +35,7 @@ class OctopusApplication(Adw.Application):
                          flags=Gio.ApplicationFlags.DEFAULT_FLAGS)
         self.create_action('quit', lambda *_: self.quit(), ['<primary>q'])
         self.create_action('about', self.on_about_action, ['<primary>a'])
-        self.create_action('search', self.on_search_1, ['<primary>s'])
+        self.create_action('search', self.on_search, ['<primary>s'])
 
         self.window = None
 
@@ -64,10 +64,9 @@ class OctopusApplication(Adw.Application):
         """Callback for the app.preferences action."""
         print('app.preferences action activated')
 
-    def on_search_1(self, widget, _):
+    def on_search(self, widget, _):
         if self.window:
-            self.window.status_page_on_seach_1()
-        print('app.search action activated')
+            self.window.status_page_on_search()
 
     def create_action(self, name, callback, shortcuts=None):
         """Add an application action.
@@ -79,7 +78,7 @@ class OctopusApplication(Adw.Application):
             shortcuts: an optional list of accelerators
         """
         action = Gio.SimpleAction.new(name, None)
-        action.connect("activate", callback)
+        action.connect('activate', callback)
         self.add_action(action)
         if shortcuts:
             self.set_accels_for_action(f"app.{name}", shortcuts)
