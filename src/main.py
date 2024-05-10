@@ -34,8 +34,10 @@ class OctopusApplication(Adw.Application):
         super().__init__(application_id='com.octopus.octopus',
                          flags=Gio.ApplicationFlags.DEFAULT_FLAGS)
         self.create_action('quit', lambda *_: self.quit(), ['<primary>q'])
-        self.create_action('about', self.on_about_action)
+        self.create_action('about', self.on_about_action, ['<primary>a'])
         self.create_action('preferences', self.on_preferences_action)
+
+        self.set_accels_for_action('app.search', ['<primary>s'])
 
     def do_activate(self):
         """Called when the application is activated.

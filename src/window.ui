@@ -1,41 +1,230 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <interface>
   <requires lib="gtk" version="4.0"/>
   <requires lib="Adw" version="1.0"/>
+
   <template class="OctopusWindow" parent="AdwApplicationWindow">
-    <property name="default-width">600</property>
-    <property name="default-height">300</property>
+    <property name="default-width">740</property>
+    <property name="default-height">540</property>
+    <property name="height-request">400</property>
+    <property name="width-request">460</property>
+    <property name="title">Files</property>
+
+    <!-- AdwBreakpoint -->
+    <child>
+      <object class="AdwBreakpoint">
+        <condition>max-width: 400sp</condition>
+        <setter object="split_view" property="collapsed">True</setter>
+      </object>
+    </child>
+
     <property name="content">
-      <object class="AdwToolbarView">
-        <child type="top">
-          <object class="AdwHeaderBar" id="header_bar">
-            <child type="end">
-              <object class="GtkMenuButton">
-                <property name="primary">True</property>
-                <property name="icon-name">open-menu-symbolic</property>
-                <property name="tooltip-text" translatable="yes">Menu</property>
-                <property name="menu-model">primary_menu</property>
+      <object class="AdwOverlaySplitView" id="split_view">
+        <property name="max-sidebar-width">220</property>
+
+        <!-- Sidebar -->
+        <property name="sidebar">
+          <object class="AdwNavigationPage">
+            <property name="title">Files</property>
+            <property name="child">
+              <object class="AdwToolbarView">
+                <child type="top">
+                  <object class="AdwHeaderBar">
+
+                    <!-- SearchButton -->
+                    <child type="start">
+                      <object class="GtkButton" id="search">
+                        <property name="action-name">app.search</property>
+                        <property name="has-frame">no</property>
+                        <property name="icon-name">system-search-symbolic</property>
+                        <property name="tooltip-text" translatable="true">Search Everywhere</property>
+                      </object>
+                    </child>
+
+                    <!-- MenuButton -->
+                    <child type="end">
+                      <object class="GtkMenuButton">
+                        <property name="has-frame">no</property>
+                        <property name="icon-name">open-menu-symbolic</property>
+                        <property name="tooltip-text" translatable="true">Main Menu</property>
+                        <property name="menu-model">primary_menu</property>
+                      </object>
+                    </child>
+
+                  </object>
+                </child>
+
+                <property name="content">
+                  <object class="GtkBox">
+                    <property name="orientation">vertical</property>
+                    <property name="spacing">2</property>
+
+                    <!-- Home -->
+                    <child>
+                      <object class="GtkButton" id="home">
+                        <property name="action-name">app.home</property>
+                        <property name="has-frame">no</property>
+                        <property name="child">
+                          <object class="AdwButtonContent">
+                            <property name="halign">1</property>
+                            <property name="margin-start">10</property>
+                            <property name="icon-name">user-home-symbolic</property>
+                            <property name="tooltip-text" translatable="true">Open Personal Folder</property>
+                            <property name="label" translatable="yes">Home</property>
+                          </object>
+                        </property>
+                      </object>
+                    </child>
+
+                    <!-- Documents -->
+                    <child>
+                      <object class="GtkButton" id="documents">
+                        <property name="action-name">app.documents</property>
+                        <property name="has-frame">no</property>
+                        <property name="child">
+                          <object class="AdwButtonContent">
+                            <property name="halign">1</property>
+                            <property name="margin-start">10</property>
+                            <property name="icon-name">folder-documents-symbolic</property>
+                            <property name="tooltip-text" translatable="true">TODO!</property>
+                            <property name="label" translatable="yes">Documents</property>
+                          </object>
+                        </property>
+                      </object>
+                    </child>
+
+                    <!-- Downloads -->
+                    <child>
+                      <object class="GtkButton" id="downloads">
+                        <property name="action-name">app.downloads</property>
+                        <property name="has-frame">no</property>
+                        <property name="child">
+                          <object class="AdwButtonContent">
+                            <property name="halign">1</property>
+                            <property name="margin-start">10</property>
+                            <property name="icon-name">folder-download-symbolic</property>
+                            <property name="tooltip-text" translatable="true">TODO!</property>
+                            <property name="label" translatable="yes">Downloads</property>
+                          </object>
+                        </property>
+                      </object>
+                    </child>
+
+                    <!-- Music -->
+                    <child>
+                      <object class="GtkButton" id="music">
+                        <property name="action-name">app.music</property>
+                        <property name="has-frame">no</property>
+                        <property name="child">
+                          <object class="AdwButtonContent">
+                            <property name="halign">1</property>
+                            <property name="margin-start">10</property>
+                            <property name="icon-name">folder-music-symbolic</property>
+                            <property name="tooltip-text" translatable="true">TODO!</property>
+                            <property name="label" translatable="yes">Music</property>
+                          </object>
+                        </property>
+                      </object>
+                    </child>
+
+                    <!-- Pictures -->
+                    <child>
+                      <object class="GtkButton" id="pictures">
+                        <property name="action-name">app.pictures</property>
+                        <property name="has-frame">no</property>
+                        <property name="child">
+                          <object class="AdwButtonContent">
+                            <property name="halign">1</property>
+                            <property name="margin-start">10</property>
+                            <property name="icon-name">folder-pictures-symbolic</property>
+                            <property name="tooltip-text" translatable="true">TODO!</property>
+                            <property name="label" translatable="yes">Pictures</property>
+                          </object>
+                        </property>
+                      </object>
+                    </child>
+
+                    <!-- Videos -->
+                    <child>
+                      <object class="GtkButton" id="videos">
+                        <property name="action-name">app.videos</property>
+                        <property name="has-frame">no</property>
+                        <property name="child">
+                          <object class="AdwButtonContent">
+                            <property name="halign">1</property>
+                            <property name="margin-start">10</property>
+                            <property name="icon-name">folder-videos-symbolic</property>
+                            <property name="tooltip-text" translatable="true">TODO!</property>
+                            <property name="label" translatable="yes">Videos</property>
+                          </object>
+                        </property>
+                      </object>
+                    </child>
+
+                    <!--Separator-->
+                    <child>
+                      <object class="GtkSeparator">
+                        <property name="margin-start">10</property>
+                        <property name="margin-end">10</property>
+                      </object>
+                    </child>
+
+                    <!-- Trash -->
+                    <child>
+                      <object class="GtkButton" id="trash">
+                        <property name="action-name">app.trash</property>
+                        <property name="has-frame">no</property>
+                        <property name="child">
+                          <object class="AdwButtonContent">
+                            <property name="halign">1</property>
+                            <property name="margin-start">10</property>
+                            <property name="icon-name">user-trash-symbolic</property>
+                            <property name="tooltip-text" translatable="true">TODO!</property>
+                            <property name="label" translatable="yes">Trash</property>
+                          </object>
+                        </property>
+                      </object>
+                    </child>
+
+                  </object>
+                </property>
+
               </object>
-            </child>
-          </object>
-        </child>
-        <property name="content">
-          <object class="GtkLabel" id="label">
-            <property name="label">Hello, World!</property>
-            <style>
-              <class name="title-1"/>
-            </style>
+            </property>
           </object>
         </property>
+
+        <!-- Content -->
+        <property name="content">
+          <object class="AdwNavigationPage">
+            <property name="title">None</property>
+            <property name="child">
+              <object class="AdwToolbarView">
+                <child type="top">
+                  <object class="AdwHeaderBar" id="header_bar">
+                    <property name="show-title">no</property>
+                  </object>
+                </child>
+
+                <property name="content">
+                  <object class="AdwStatusPage" id="status_page">
+                    <property name="title">Empty folder.</property>
+                    <property name="icon-name">folder-symbolic</property>
+                  </object>
+                </property>
+              </object>
+            </property>
+          </object>
+        </property>
+
       </object>
     </property>
+
   </template>
+
   <menu id="primary_menu">
     <section>
-      <item>
-        <attribute name="label" translatable="yes">_Preferences</attribute>
-        <attribute name="action">app.preferences</attribute>
-      </item>
       <item>
         <attribute name="label" translatable="yes">_Keyboard Shortcuts</attribute>
         <attribute name="action">win.show-help-overlay</attribute>
@@ -46,4 +235,5 @@
       </item>
     </section>
   </menu>
+
 </interface>
