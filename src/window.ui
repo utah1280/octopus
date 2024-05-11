@@ -11,6 +11,14 @@
     <property name="width-request">460</property>
     <property name="title">Files</property>
 
+    <!-- Status Page -->
+    <child>
+      <object class="AdwStatusPage" id="status_page">
+        <property name="title">Search</property>
+        <property name="icon-name">None</property>
+      </object>
+    </child>
+
     <!-- Search Widget -->
     <child>
       <object class="AdwClamp" id="search_widget">
@@ -207,10 +215,7 @@
                 </child>
 
                 <property name="content">
-                  <object class="AdwStatusPage" id="status_page">
-                    <property name="title">Empty folder.</property>
-                    <property name="icon-name">folder-symbolic</property>
-                  </object>
+                  <object class="GtkScrolledWindow" id="scrolled_window"></object>
                 </property>
               </object>
             </property>

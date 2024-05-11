@@ -72,26 +72,25 @@ class OctopusApplication(Adw.Application):
         print('app.preferences action activated')
 
     def on_search(self, widget, _):
-        if self.window:
-            self.window.status_page_on_search()
+        self.window.status_page_on_search()
 
     def on_home(self, widget, _):
-        pass
+        self.window.list_()
 
     def on_documents(self, widget, _):
-        pass
+        self.window.list_(self.window.current_path + "/Documents")
 
     def on_downloads(self, widget, _):
-        pass
+        self.window.list_(self.window.current_path + "/Downloads")
 
     def on_music(self, widget, _):
-        pass
+        self.window.list_(self.window.current_path + "/Music")
 
     def on_pictures(self, widget, _):
-        pass
+        self.window.list_(self.window.current_path + "/Pictures")
 
     def on_videos(self, widget, _):
-        pass
+        self.window.list_(self.window.current_path + "/Videos")
 
     def on_trash(self, widget, _):
         pass
