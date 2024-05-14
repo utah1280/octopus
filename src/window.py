@@ -1,120 +1,112 @@
-# window.py
-#
-# Copyright 2024 Ravshan Zaripov
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <https://www.gnu.org/licenses/>.
-#
-# SPDX-License-Identifier: GPL-3.0-or-later
-
 import os
-import subprocess
+import logging
+from gi.repository import Adw, Gtk
 
-from gi.repository import Adw
-from gi.repository import Gtk
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
+FILE_TYPE_MAP = {
+    'text': ['.txt', '.text'],
+    'picture': ['.jpg', '.jpeg', '.png', '.gif', '.svg'],
+    'audio': ['.mp3', '.wav', '.flac'],
+    'video': ['.mp4', '.mov', '.avi'],
+    'archive': ['.zip', '.tar', '.gz', '.rar'],
+}
 
 def get_home_directory():
+    """Returns the home directory of the current user."""
     return os.path.expanduser("~")
 
-def classify_file_type(filename):
+def get_file_type(filename):
+    """Returns the type of the file based on its extension."""
     extension = os.path.splitext(filename)[1].lower()
     if not extension:
         return 'directory'
-    elif extension in ('.txt', '.text'):
-        return 'text'
-    elif extension in ('.jpg', '.jpeg', '.png', '.gif', '.svg'):
-        return 'picture'
-    elif extension in ('.mp3', '.wav', '.flac'):
-        return 'audio'
-    elif extension in ('.mp4', '.mov', '.avi'):
-        return 'video'
-    elif extension in ('.zip', '.tar', '.gz', '.rar'):
-        return 'archive'
-    else:
-        return ''
+    for file_type, extensions in FILE_TYPE_MAP.items():
+        if extension in extensions:
+            return file_type
+    return 'unknown'
 
-def ls(directory, hidden=False):
-    if directory is None:
-        directory = "."
-
+def list_directory_files(directory, show_hidden=False):
+    """Returns a list of files in the given directory with their types."""
     files = os.listdir(directory)
-    if not hidden:
+    if not show_hidden:
         files = [file for file in files if not file.startswith('.')]
-
-    files_with_types = []
-    for file in files:
-        files_with_types.append({'name': file, 'type': classify_file_type(file)})
-
-    return files_with_types
+    return [{'name': file, 'type': get_file_type(file)} for file in files]
 
 
 @Gtk.Template(resource_path='/com/octopus/octopus/window.ui')
 class OctopusWindow(Adw.ApplicationWindow):
     __gtype_name__ = 'OctopusWindow'
 
-    # Helpers
-    view_mode = "list"
-    hidden = False
-    search_active = False
     home_path = get_home_directory()
     current_path = home_path
 
-    # Buttons
-    search_button = Gtk.Template.Child()
-    home_button = Gtk.Template.Child()
-    documents_button = Gtk.Template.Child()
-    downloads_button = Gtk.Template.Child()
-    music_button = Gtk.Template.Child()
-    pictures_button = Gtk.Template.Child()
-    videos_button = Gtk.Template.Child()
-    trash_button = Gtk.Template.Child()
+    button_names = [
+        "search_button",
+        "home_button",
+        "documents_button",
+        "downloads_button",
+        "music_button",
+        "pictures_button",
+        "videos_button",
+        "trash_button"
+    ]
 
-    # Widgets
-    content_ = Gtk.Template.Child()
-    list_view = Gtk.Template.Child()
-    list_view_content = Gtk.Template.Child()
-    search_widget = Gtk.Template.Child()
+    widget_names = [
+        "content",
+        "list_view",
+        "list_view_content",
+        "search_widget"
+    ]
 
+    for name in button_names + widget_names:
+        locals()[name] = Gtk.Template.Child()
 
     def __init__(self, **kwargs):
+        """Initializes the OctopusWindow."""
         super().__init__(**kwargs)
 
-        self.documents_button.set_tooltip_text(self.home_path + "/Documents")
-        self.downloads_button.set_tooltip_text(self.home_path + "/Documents")
-        self.music_button.set_tooltip_text(self.home_path + "/Music")
-        self.pictures_button.set_tooltip_text(self.home_path + "/Pictures")
-        self.videos_button.set_tooltip_text(self.home_path + "/Videos")
+        # Set tooltips for specific buttons
+        tooltip_paths = {
+            self.documents_button: "/Documents",
+            self.downloads_button: "/Downloads",
+            self.music_button: "/Music",
+            self.pictures_button: "/Pictures",
+            self.videos_button: "/Videos"
+        }
 
-        self.list_files()
+        for button, path in tooltip_paths.items():
+            button.set_tooltip_text(f"{self.home_path}{path}")
 
-    def list_files(self, directory=home_path):
-        files = ls(directory)
+        self.update_file_list(self.home_path)
 
-        if len(files) == 0:
+    def update_file_list(self, directory=None):
+        """Updates the file list in the UI for the given directory."""
+        directory = directory or self.home_path
+        files = list_directory_files(directory)
+
+        if not files:
             status_page = Adw.StatusPage(title="Folder is empty", icon_name="folder-symbolic")
-
-            if self.content_.get_content() != status_page:
-                self.content_.set_content(status_page)
+            if self.content.get_content() != status_page:
+                self.content.set_content(status_page)
+            logger.info(f"No files found in directory: {directory}")
             return
 
-        self.content_.set_content()
+        list_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, margin_top=5, margin_bottom=5, margin_start=10, margin_end=10, spacing=3)
 
-        list_box = Gtk.Box(orientation="vertical", margin_top=5, margin_bottom=5, margin_start=10, margin_end=10, spacing=3)
         self.list_view_content.set_child(list_box)
-        self.content_.set_content(self.list_view)
+        self.content.set_content()
+        self.content.set_content(self.list_view)
 
         for file in files:
-            button = Gtk.Button(child=Adw.ButtonContent(label=file['name'], halign=1, margin_start=5, icon_name=file['type']), has_frame=False)
-            button.connect("clicked", lambda callback, file_name=file['name']: self.list_files(os.path.join(self.current_path, file_name)))
+            button = Gtk.Button(
+                child=Adw.ButtonContent(label=file['name'], halign=Gtk.Align.START, margin_start=5, icon_name=file['type']),
+                has_frame=False
+            )
+            button.connect("clicked", lambda btn, fname=file['name']: self.update_file_list(os.path.join(directory, fname)))
             list_box.append(button)
+
+        self.current_path = directory
+        logger.info(f"Updated file list for directory: {directory}")

@@ -323,7 +323,7 @@
           <object class="AdwNavigationPage">
             <property name="title">None</property>
             <property name="child">
-              <object class="AdwToolbarView" id="content_">
+              <object class="AdwToolbarView" id="content">
                 <child type="top">
                   <object class="AdwHeaderBar">
                     <property name="show-title">yes</property>
