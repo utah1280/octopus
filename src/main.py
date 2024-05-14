@@ -43,6 +43,8 @@ class OctopusApplication(Adw.Application):
         self.create_action('pictures', self.on_pictures)
         self.create_action('videos', self.on_videos)
         self.create_action('trash', self.on_trash)
+        self.create_action('back', self.on_back)
+        self.create_action('forward', self.on_forward)
 
         self.window = None
 
@@ -75,24 +77,30 @@ class OctopusApplication(Adw.Application):
         self.window.status_page_on_search()
 
     def on_home(self, widget, _):
-        self.window.list_()
+        self.window.list_files()
 
     def on_documents(self, widget, _):
-        self.window.list_(self.window.current_path + "/Documents")
+        self.window.list_files(self.window.home_path + "/Documents")
 
     def on_downloads(self, widget, _):
-        self.window.list_(self.window.current_path + "/Downloads")
+        self.window.list_files(self.window.home_path + "/Downloads")
 
     def on_music(self, widget, _):
-        self.window.list_(self.window.current_path + "/Music")
+        self.window.list_files(self.window.home_path + "/Music")
 
     def on_pictures(self, widget, _):
-        self.window.list_(self.window.current_path + "/Pictures")
+        self.window.list_files(self.window.current_path + "/Pictures")
 
     def on_videos(self, widget, _):
-        self.window.list_(self.window.current_path + "/Videos")
+        self.window.list_files(self.window.current_path + "/Videos")
 
     def on_trash(self, widget, _):
+        self.window.list_files(".local/share/Trash/files")
+
+    def on_back(self, widget, _):
+        pass
+
+    def on_forward(self, widget, _):
         pass
 
     def create_action(self, name, callback, shortcuts=None):

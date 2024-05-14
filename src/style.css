@@ -1,0 +1,10 @@
+.custom-button {
+  color: #8a8686;
+  font: 13px Helvetica, sans-serif;
+}
+
+.sharp-button {
+  color: #8a8686;
+  font: 13px Helvetica, sans-serif;
+  border-radius: 0;
+}

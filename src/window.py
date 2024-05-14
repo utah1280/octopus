@@ -27,44 +27,37 @@ from gi.repository import Gtk
 def get_home_directory():
     return os.path.expanduser("~")
 
-def ls(path_):
-    if path_ is None:
-        path_ = "."
-
-    result = subprocess.run(["ls", path_], stdout=subprocess.PIPE, text=True)
-
-    if result.returncode == 0:
-        filenames = result.stdout.split('\n')
-
-        filenames = [filename for filename in filenames if filename]
-
-        filenames.sort()
-
-        return filenames
+def classify_file_type(filename):
+    extension = os.path.splitext(filename)[1].lower()
+    if not extension:
+        return 'directory'
+    elif extension in ('.txt', '.text'):
+        return 'text'
+    elif extension in ('.jpg', '.jpeg', '.png', '.gif', '.svg'):
+        return 'picture'
+    elif extension in ('.mp3', '.wav', '.flac'):
+        return 'audio'
+    elif extension in ('.mp4', '.mov', '.avi'):
+        return 'video'
+    elif extension in ('.zip', '.tar', '.gz', '.rar'):
+        return 'archive'
     else:
-        print("Error executing ls command.")
-        return []
+        return ''
 
-def create_list_view_box():
-    list_view_box = Gtk.Box()
+def ls(directory, hidden=False):
+    if directory is None:
+        directory = "."
 
-    list_view_box.set_margin_top(10)
-    list_view_box.set_margin_bottom(10)
-    list_view_box.set_margin_start(10)
-    list_view_box.set_margin_end(10)
-    list_view_box.set_spacing(5)
-    list_view_box.set_orientation(Gtk.Orientation.VERTICAL)
+    files = os.listdir(directory)
+    if not hidden:
+        files = [file for file in files if not file.startswith('.')]
 
-    return list_view_box
+    files_with_types = []
+    for file in files:
+        files_with_types.append({'name': file, 'type': classify_file_type(file)})
 
-def modify_status_page(widget_, title_, icon_, description_=None):
-    widget_.set_title("")
-    widget_.set_icon_name(None)
-    widget_.set_description(None)
+    return files_with_types
 
-    widget_.set_title(title_)
-    widget_.set_icon_name(icon_)
-    widget_.set_description(description_)
 
 @Gtk.Template(resource_path='/com/octopus/octopus/window.ui')
 class OctopusWindow(Adw.ApplicationWindow):
@@ -72,6 +65,7 @@ class OctopusWindow(Adw.ApplicationWindow):
 
     # Helpers
     view_mode = "list"
+    hidden = False
     search_active = False
     home_path = get_home_directory()
     current_path = home_path
@@ -87,11 +81,11 @@ class OctopusWindow(Adw.ApplicationWindow):
     trash_button = Gtk.Template.Child()
 
     # Widgets
-    header_bar = Gtk.Template.Child()
-    status_page = Gtk.Template.Child()
+    content_ = Gtk.Template.Child()
+    list_view = Gtk.Template.Child()
+    list_view_content = Gtk.Template.Child()
     search_widget = Gtk.Template.Child()
-    toolbar_view = Gtk.Template.Child()
-    scrolled_window = Gtk.Template.Child()
+
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -102,57 +96,25 @@ class OctopusWindow(Adw.ApplicationWindow):
         self.pictures_button.set_tooltip_text(self.home_path + "/Pictures")
         self.videos_button.set_tooltip_text(self.home_path + "/Videos")
 
-        self.list_()
+        self.list_files()
 
-    def open_search(self):
-        self.search_button.set_icon_name('folder-drag-accept-symbolic')
-        self.search_button.set_tooltip_text('Files')
+    def list_files(self, directory=home_path):
+        files = ls(directory)
 
-        self.header_bar.set_show_title(True)
-        self.header_bar.set_title_widget(self.search_widget)
-
-        modify_status_page(self.status_page, title_="Search Everywhere", icon_="folder-saved-search-symbolic", description_="Find files and folders in all search locations")
-
-        self.scrolled_window.set_child(self.status_page)
-
-        self.search_active = True
-
-    def close_search(self):
-        self.search_button.set_icon_name('system-search-symbolic')
-        self.search_button.set_tooltip_text('Search Everywhere')
-
-        self.header_bar.set_show_title(False)
-        self.header_bar.set_title_widget(None)
-
-        self.search_active = False
-
-        self.list_()
-
-    def status_page_on_search(self):
-        if self.search_active:
-            self.close_search()
-        else:
-            self.open_search()
-
-    def list_(self, path_=None):
-        if self.search_active:
-            self.close_search()
-
-        files = ls(path_)
-
-        # If the folder is empty insert corresponding status page widget
         if len(files) == 0:
-            modify_status_page(self.status_page, title_="Folder is empty", icon_="folder-symbolic")
+            status_page = Adw.StatusPage(title="Folder is empty", icon_name="folder-symbolic")
 
-            if self.scrolled_window.get_child() != self.status_page:
-                self.scrolled_window.set_child(self.status_page)
-
+            if self.content_.get_content() != status_page:
+                self.content_.set_content(status_page)
             return
 
-        list_view_box = create_list_view_box()
+        self.content_.set_content()
+
+        list_box = Gtk.Box(orientation="vertical", margin_top=5, margin_bottom=5, margin_start=10, margin_end=10, spacing=3)
+        self.list_view_content.set_child(list_box)
+        self.content_.set_content(self.list_view)
 
         for file in files:
-            button = Gtk.Button(child=Adw.ButtonContent(label=file, halign=1, margin_start=10))
-            list_view_box.append(button)
-
-        self.scrolled_window.set_child(list_view_box)
+            button = Gtk.Button(child=Adw.ButtonContent(label=file['name'], halign=1, margin_start=5, icon_name=file['type']), has_frame=False)
+            button.connect("clicked", lambda callback, file_name=file['name']: self.list_files(os.path.join(self.current_path, file_name)))
+            list_box.append(button)

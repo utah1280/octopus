@@ -1,23 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <interface>
   <requires lib="gtk" version="4.0"/>
   <requires lib="Adw" version="1.0"/>
 
   <template class="OctopusWindow" parent="AdwApplicationWindow">
-    <property name="default-width">740</property>
-    <property name="default-height">540</property>
+    <property name="default-width">840</property>
+    <property name="default-height">640</property>
     <property name="height-request">400</property>
     <property name="width-request">460</property>
     <property name="title">Files</property>
-
-    <!-- Status Page -->
-    <child>
-      <object class="AdwStatusPage" id="status_page">
-        <property name="title">Search</property>
-        <property name="icon-name">None</property>
-      </object>
-    </child>
 
     <!-- Search Widget -->
     <child>
@@ -31,16 +22,105 @@
       </object>
     </child>
 
+    <!-- ListView Widget -->
+    <child>
+      <object class="GtkBox" id="list_view">
+        <property name="orientation">vertical</property>
+
+        <!-- Top -->
+        <child>
+          <object class="GtkBox">
+            <property name="margin-start">10</property>
+            <property name="margin-end">10</property>
+            <property name="orientation">horizontal</property>
+
+            <!-- Sort by Name -->
+            <child>
+              <object class="GtkButton">
+                <property name="hexpand">yes</property>
+                <property name="has-frame">no</property>
+                <property name="child">
+                  <object class="AdwButtonContent">
+                    <property name="icon-name">orientation-landscape-symbolic</property>
+                    <property name="halign">1</property>
+                    <property name="label">Name</property>
+                  </object>
+                </property>
+
+                <style>
+                  <class name="sharp-button"/>
+                </style>
+
+              </object>
+            </child>
+
+            <!-- Sort by Size -->
+            <child>
+              <object class="GtkButton">
+                <property name="has-frame">no</property>
+                <property name="width-request">100</property>
+                <property name="child">
+                  <object class="AdwButtonContent">
+                    <property name="icon-name">orientation-landscape-symbolic</property>
+                    <property name="halign">1</property>
+                    <property name="label">Size</property>
+                  </object>
+                </property>
+
+                <style>
+                  <class name="sharp-button"/>
+                </style>
+
+              </object>
+            </child>
+
+            <!-- Sort by Date -->
+            <child>
+              <object class="GtkButton">
+                <property name="has-frame">no</property>
+                <property name="width-request">100</property>
+                <property name="child">
+                  <object class="AdwButtonContent">
+                    <property name="icon-name">orientation-landscape-symbolic</property>
+                    <property name="halign">1</property>
+                    <property name="label">Date</property>
+                  </object>
+                </property>
+
+                <style>
+                  <class name="sharp-button"/>
+                </style>
+
+              </object>
+            </child>
+
+          </object>
+        </child>
+
+        <!-- Content -->
+        <child>
+          <object class="GtkScrolledWindow" id="list_view_content">
+            <property name="vexpand">yes</property>
+          </object>
+        </child>
+
+      </object>
+    </child>
+
+
+    <!-- MAIN -->
     <property name="content">
       <object class="AdwOverlaySplitView">
-        <property name="max-sidebar-width">220</property>
+        <property name="max-sidebar-width">200</property>
 
         <!-- Sidebar -->
         <property name="sidebar">
           <object class="AdwNavigationPage">
             <property name="title">Files</property>
+
             <property name="child">
               <object class="AdwToolbarView">
+
                 <child type="top">
                   <object class="AdwHeaderBar">
 
@@ -70,7 +150,7 @@
                 <property name="content">
                   <object class="GtkBox">
                     <property name="orientation">vertical</property>
-                    <property name="spacing">2</property>
+                    <property name="spacing">3</property>
 
                     <!-- Home -->
                     <child>
@@ -84,6 +164,11 @@
                             <property name="icon-name">user-home-symbolic</property>
                             <property name="tooltip-text" translatable="true">Open Personal Folder</property>
                             <property name="label" translatable="yes">Home</property>
+
+                            <style>
+                              <class name="custom-button"/>
+                            </style>
+
                           </object>
                         </property>
                       </object>
@@ -100,6 +185,11 @@
                             <property name="margin-start">10</property>
                             <property name="icon-name">folder-documents-symbolic</property>
                             <property name="label" translatable="yes">Documents</property>
+
+                            <style>
+                              <class name="custom-button"/>
+                            </style>
+
                           </object>
                         </property>
                       </object>
@@ -116,6 +206,11 @@
                             <property name="margin-start">10</property>
                             <property name="icon-name">folder-download-symbolic</property>
                             <property name="label" translatable="yes">Downloads</property>
+
+                            <style>
+                              <class name="custom-button"/>
+                            </style>
+
                           </object>
                         </property>
                       </object>
@@ -132,6 +227,11 @@
                             <property name="margin-start">10</property>
                             <property name="icon-name">folder-music-symbolic</property>
                             <property name="label" translatable="yes">Music</property>
+
+                            <style>
+                              <class name="custom-button"/>
+                            </style>
+
                           </object>
                         </property>
                       </object>
@@ -148,6 +248,11 @@
                             <property name="margin-start">10</property>
                             <property name="icon-name">folder-pictures-symbolic</property>
                             <property name="label" translatable="yes">Pictures</property>
+
+                            <style>
+                              <class name="custom-button"/>
+                            </style>
+
                           </object>
                         </property>
                       </object>
@@ -164,6 +269,11 @@
                             <property name="margin-start">10</property>
                             <property name="icon-name">folder-videos-symbolic</property>
                             <property name="label" translatable="yes">Videos</property>
+
+                            <style>
+                              <class name="custom-button"/>
+                            </style>
+
                           </object>
                         </property>
                       </object>
@@ -189,6 +299,11 @@
                             <property name="icon-name">user-trash-symbolic</property>
                             <property name="tooltip-text" translatable="true">Open Trash</property>
                             <property name="label" translatable="yes">Trash</property>
+
+                            <style>
+                              <class name="custom-button"/>
+                            </style>
+
                           </object>
                         </property>
                       </object>
@@ -199,6 +314,7 @@
 
               </object>
             </property>
+
           </object>
         </property>
 
@@ -207,16 +323,64 @@
           <object class="AdwNavigationPage">
             <property name="title">None</property>
             <property name="child">
-              <object class="AdwToolbarView" id="toolbar_view">
+              <object class="AdwToolbarView" id="content_">
                 <child type="top">
-                  <object class="AdwHeaderBar" id="header_bar">
-                    <property name="show-title">no</property>
+                  <object class="AdwHeaderBar">
+                    <property name="show-title">yes</property>
+
+                    <!-- Title-widget TODO! -->
+                    <property name="title-widget">
+                      <object class="AdwClamp">
+                        <property name="child">
+                          <object class="AdwSplitButton"></object>
+                        </property>
+                      </object>
+                    </property>
+
+                    <!-- Start-widget -->
+                    <child type="start">
+                      <object class="GtkBox">
+                        <property name="orientation">horizontal</property>
+
+                        <child>
+                          <object class="GtkButton">
+                            <property name="action-name">app.back</property>
+                            <property name="has-frame">no</property>
+                            <property name="tooltip-text">Back</property>
+                            <property name="icon-name">go-previous-symbolic</property>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="GtkButton">
+                            <property name="action-name">app.forward</property>
+                            <property name="has-frame">no</property>
+                            <property name="tooltip-text">Forward</property>
+                            <property name="icon-name">go-next-symbolic</property>
+                          </object>
+                        </child>
+
+                      </object>
+                    </child>
+
+                    <!-- End-widget -->
+                    <child type="end">
+                      <object class="GtkBox">
+                        <property name="orientation">horizontal</property>
+
+                        <child>
+                          <object class="AdwSplitButton">
+                            <property name="action-name">app.grid_view</property>
+                            <property name="tooltip-text">Grid View</property>
+                            <property name="icon-name">view-grid-symbolic</property>
+                          </object>
+                        </child>
+
+                      </object>
+                    </child>
+
                   </object>
                 </child>
-
-                <property name="content">
-                  <object class="GtkScrolledWindow" id="scrolled_window"></object>
-                </property>
               </object>
             </property>
           </object>
@@ -234,10 +398,10 @@
         <attribute name="action">win.show-help-overlay</attribute>
       </item>
       <item>
-        <attribute name="label" translatable="yes">_About Octopus</attribute>
+        <attribute name="label" translatable="yes">_About Prototype</attribute>
         <attribute name="action">app.about</attribute>
       </item>
     </section>
   </menu>
-
 </interface>
+
