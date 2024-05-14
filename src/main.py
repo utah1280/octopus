@@ -7,7 +7,7 @@ import logging
 gi.require_version('Gtk', '4.0')
 gi.require_version('Adw', '1')
 
-from gi.repository import Gtk, Gio, Adw
+from gi.repository import Gtk, Gio, Adw, GLib
 from .window import OctopusWindow
 
 
@@ -54,10 +54,9 @@ class OctopusApplication(Adw.Application):
         self.window = None
         self.home_path = os.path.expanduser("~")
         self.current_path = self.home_path
-
+        self.search_active = False
         self.last_click_time = 0
         self.selected_button = None
-
         self.create_actions()
 
 
@@ -72,6 +71,33 @@ class OctopusApplication(Adw.Application):
                                 developers=['Ravshan Zaripov', 'Bobir Ibragimov', 'Akbar Aminov'],
                                 copyright='© 2024 Ravshan Zaripov')
         about.present()
+
+    def on_search(self, widget, _):
+        if self.search_active:
+            self.window.search_button.set_icon_name("system-search-symbolic")
+            self.window.search_button.set_tooltip_text("Search Everywhere")
+
+            self.window.content_topbar.set_title_widget()
+            self.window.content_topbar.set_title_widget(self.window.content_topbar_title)
+
+            self.window.content_topbar.pack_start(self.window.content_topbar_start)
+
+            self.update_file_list(self.current_path)
+
+            self.search_active = False
+        else:
+            self.window.search_button.set_icon_name("folder-open-symbolic")
+            self.window.search_button.set_tooltip_text("Go to Files")
+
+            self.window.content_topbar.set_title_widget()
+            self.window.content_topbar.set_title_widget(self.window.search_widget)
+
+            self.window.content_topbar.remove(self.window.content_topbar_start)
+
+            self.window.content.set_content(Adw.StatusPage(icon_name="system-search-symbolic", title="Search Everywhere", description="Find files and folders in all search locations."))
+
+            self.search_active = True
+
 
     def on_home(self, widget, _):
         """Callback for the app.home action."""
@@ -101,6 +127,7 @@ class OctopusApplication(Adw.Application):
         """Callback for the app.trash action."""
         self.update_file_list(os.path.expanduser("~/.local/share/Trash/files"))
 
+    # TODO!.
     def on_back(self, widget, _):
         """Callback for the app.back action."""
         pass
@@ -108,10 +135,6 @@ class OctopusApplication(Adw.Application):
     # TODO!.
     def on_forward(self, widget, _):
         """Callback for the app.forward action."""
-        pass
-
-    def on_search(self, widget, _):
-        """Callback for the app.search action."""
         pass
 
 
@@ -135,11 +158,14 @@ class OctopusApplication(Adw.Application):
         directory = directory or self.home_path
         files = list_directory_files(directory)
 
+        self.window.path_button.set_label(directory)
+
         if not files:
             status_page = Adw.StatusPage(title="Folder is empty", icon_name="folder-symbolic")
             if self.window.content.get_content() != status_page:
                 self.window.content.set_content(status_page)
             logger.info(f"No files found in directory: {directory}")
+            self.current_path = directory
             return
 
         list_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, margin_top=5, margin_bottom=5, margin_start=10, margin_end=10, spacing=3)

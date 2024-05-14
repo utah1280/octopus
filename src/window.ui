@@ -325,21 +325,29 @@
             <property name="child">
               <object class="AdwToolbarView" id="content">
                 <child type="top">
-                  <object class="AdwHeaderBar">
+                  <object class="AdwHeaderBar" id="content_topbar">
                     <property name="show-title">yes</property>
 
                     <!-- Title-widget TODO! -->
                     <property name="title-widget">
-                      <object class="AdwClamp">
+                      <object class="AdwClamp" id="content_topbar_title">
                         <property name="child">
-                          <object class="AdwSplitButton"></object>
+                          <object class="AdwSplitButton">
+                            <property name="child">
+                              <object class="AdwButtonContent" id="path_button">
+                                <property name="icon-name">folder-remote-symbolic</property>
+                                <property name="halign">1</property>
+                                <property name="margin-start">10</property>
+                              </object>
+                            </property>
+                          </object>
                         </property>
                       </object>
                     </property>
 
                     <!-- Start-widget -->
                     <child type="start">
-                      <object class="GtkBox">
+                      <object class="GtkBox" id="content_topbar_start">
                         <property name="orientation">horizontal</property>
 
                         <child>
@@ -404,4 +412,3 @@
     </section>
   </menu>
 </interface>
-

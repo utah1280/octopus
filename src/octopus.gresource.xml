@@ -3,6 +3,7 @@
   <gresource prefix="/com/octopus/octopus">
     <file preprocess="xml-stripblanks">window.ui</file>
     <file preprocess="xml-stripblanks">gtk/help-overlay.ui</file>
+    <file preprocess="xml-stripblanks">icons/exit-symbolic.svg</file>
     <file>icons/directory.png</file>
     <file>icons/text.png</file>
     <file>icons/picture.png</file>

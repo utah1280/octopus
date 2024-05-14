@@ -18,11 +18,15 @@ class OctopusWindow(Adw.ApplicationWindow):
         "videos_button",
         "trash_button",
         "go_back_button",
-        "go_forward_button"
+        "go_forward_button",
+        "path_button"
     ]
 
     widget_names = [
         "content",
+        "content_topbar",
+        "content_topbar_start",
+        "content_topbar_title",
         "list_view",
         "list_view_content",
         "search_widget"
