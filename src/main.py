@@ -1,6 +1,7 @@
 import os
 import gi
 import sys
+import time
 import logging
 
 gi.require_version('Gtk', '4.0')
@@ -54,6 +55,9 @@ class OctopusApplication(Adw.Application):
         self.home_path = os.path.expanduser("~")
         self.current_path = self.home_path
 
+        self.last_click_time = 0
+        self.selected_button = None
+
         self.create_actions()
 
 
@@ -95,7 +99,16 @@ class OctopusApplication(Adw.Application):
 
     def on_trash(self, widget, _):
         """Callback for the app.trash action."""
-        self.update_file_list(".local/share/Trash/files")
+        self.update_file_list(os.path.expanduser("~/.local/share/Trash/files"))
+
+    def on_back(self, widget, _):
+        """Callback for the app.back action."""
+        pass
+
+    # TODO!.
+    def on_forward(self, widget, _):
+        """Callback for the app.forward action."""
+        pass
 
     def on_search(self, widget, _):
         """Callback for the app.search action."""
@@ -103,6 +116,20 @@ class OctopusApplication(Adw.Application):
 
 
     #
+    def on_button_clicked(self, button, filename):
+        current_time = time.time()
+        if button == self.selected_button and current_time - self.last_click_time < 0.5:
+            self.update_file_list(os.path.join(self.current_path, filename))
+            self.selected_button = None
+            self.last_click_time = 0
+        else:
+            if self.selected_button:
+                self.selected_button.get_style_context().remove_class("selected")
+            self.selected_button = button
+            self.last_click_time = current_time
+
+            button.get_style_context().add_class("selected")
+
     def update_file_list(self, directory=None):
         """Updates the file list in the UI for the given directory."""
         directory = directory or self.home_path
@@ -126,7 +153,7 @@ class OctopusApplication(Adw.Application):
                 child=Adw.ButtonContent(label=file['name'], halign=Gtk.Align.START, margin_start=5, icon_name=file['type']),
                 has_frame=False
             )
-            button.connect("clicked", lambda btn, fname=file['name']: self.update_file_list(os.path.join(directory, fname)))
+            button.connect("clicked", self.on_button_clicked, file['name'])
             list_box.append(button)
 
         self.current_path = directory
@@ -147,6 +174,8 @@ class OctopusApplication(Adw.Application):
             ('pictures', self.on_pictures, None),
             ('videos', self.on_videos, None),
             ('trash', self.on_trash, None),
+            ('back', self.on_back, ['<primary>Left']),
+            ('forward', self.on_forward, ['<primary>Right'])
         ]
         for name, callback, shortcuts in actions:
             self.create_action(name, callback, shortcuts)

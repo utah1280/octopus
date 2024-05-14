@@ -8,3 +8,7 @@
   font: 13px Helvetica, sans-serif;
   border-radius: 0;
 }
+
+button.selected {
+    background-color: #1588c5;
+}

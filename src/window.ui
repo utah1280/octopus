@@ -343,7 +343,7 @@
                         <property name="orientation">horizontal</property>
 
                         <child>
-                          <object class="GtkButton">
+                          <object class="GtkButton" id="go_back_button">
                             <property name="action-name">app.back</property>
                             <property name="has-frame">no</property>
                             <property name="tooltip-text">Back</property>
@@ -352,7 +352,7 @@
                         </child>
 
                         <child>
-                          <object class="GtkButton">
+                          <object class="GtkButton" id="go_forward_button">
                             <property name="action-name">app.forward</property>
                             <property name="has-frame">no</property>
                             <property name="tooltip-text">Forward</property>

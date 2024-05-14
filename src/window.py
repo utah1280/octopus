@@ -16,7 +16,9 @@ class OctopusWindow(Adw.ApplicationWindow):
         "music_button",
         "pictures_button",
         "videos_button",
-        "trash_button"
+        "trash_button",
+        "go_back_button",
+        "go_forward_button"
     ]
 
     widget_names = [
