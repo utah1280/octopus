@@ -62,6 +62,7 @@ class OctopusApplication(Adw.Application):
         self.selected_button = None
         self.history = []
         self.history_index = -1
+        self.ascending = True
         self.create_actions()
 
     # Callbacks
@@ -104,6 +105,17 @@ class OctopusApplication(Adw.Application):
             self.history_index += 1
             self.update_file_list(self.history[self.history_index], add_to_history=False)
 
+    def on_sort(self, widget, _):
+        if self.ascending:
+            self.window.sort_by_name.set_icon_name("orientation-landscape-inverse-symbolic")
+        else:
+            self.window.sort_by_name.set_icon_name("orientation-landscape-symbolic")
+
+        self.ascending = not self.ascending
+        self.update_file_list(self.current_path)
+
+        logger.info("Sorted")
+
     def on_button_clicked(self, button, filename):
         current_time = time.time()
         full_path = os.path.join(self.current_path, filename)
@@ -123,9 +135,20 @@ class OctopusApplication(Adw.Application):
     # Update UI
     def update_file_list(self, directory=None, add_to_history=True):
         """Updates the file list in the UI for the given directory."""
+
+        self.window.search_button.set_icon_name("system-search-symbolic")
+        self.window.search_button.set_tooltip_text("Search Everywhere")
+        self.window.content_topbar.set_title_widget(self.window.content_topbar_title)
+        self.window.content_topbar.pack_start(self.window.content_topbar_start)
+
+        self.search_active = False
+
         directory = directory or self.home_path
         files = list_directory_files(directory)
         self.window.path_button.set_label(directory)
+
+        # Sort files by name
+        files.sort(key=lambda x: x['name'], reverse=not self.ascending)
 
         if add_to_history:
             if self.history_index < len(self.history) - 1:
@@ -172,6 +195,7 @@ class OctopusApplication(Adw.Application):
             ('trash', lambda widget, _: self.on_navigate(widget, os.path.expanduser("~/.local/share/Trash/files")), None),
             ('back', self.on_back, ['<primary>Left']),
             ('forward', self.on_forward, ['<primary>Right']),
+            ('sort_by_name', self.on_sort, None)
         ]
         for name, callback, shortcuts in actions:
             self.create_action(name, callback, shortcuts)

@@ -22,7 +22,7 @@
       </object>
     </child>
 
-    <!-- ListView Widget -->
+    <!-- ListView Widget  vtoroy ekran-->
     <child>
       <object class="GtkBox" id="list_view">
         <property name="orientation">vertical</property>
@@ -37,10 +37,11 @@
             <!-- Sort by Name -->
             <child>
               <object class="GtkButton">
+                <property name="action-name">app.sort_by_name</property>
                 <property name="hexpand">yes</property>
                 <property name="has-frame">no</property>
                 <property name="child">
-                  <object class="AdwButtonContent">
+                  <object class="AdwButtonContent" id="sort_by_name">
                     <property name="icon-name">orientation-landscape-symbolic</property>
                     <property name="halign">1</property>
                     <property name="label">Name</property>

@@ -30,7 +30,8 @@ class OctopusWindow(Adw.ApplicationWindow):
         "list_view",
         "list_view_content",
         "search_widget",
-        "search_widget_entry"
+        "search_widget_entry",
+        "sort_by_name"
     ]
 
     for name in button_names + widget_names:
