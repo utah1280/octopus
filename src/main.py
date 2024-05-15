@@ -3,6 +3,7 @@ import gi
 import sys
 import time
 import logging
+import subprocess
 
 gi.require_version('Gtk', '4.0')
 gi.require_version('Adw', '1')
@@ -42,7 +43,12 @@ def list_directory_files(directory, show_hidden=False):
         files = [file for file in files if not file.startswith('.')]
     return [{'name': file, 'type': get_file_type(file)} for file in files]
 
-
+def open_file(filepath):
+    """Open the file with the default application."""
+    try:
+        subprocess.run(['xdg-open', filepath], check=True)
+    except subprocess.CalledProcessError as e:
+        logger.error(f"Error opening file {filepath}: {e}")
 
 
 class OctopusApplication(Adw.Application):
@@ -55,8 +61,13 @@ class OctopusApplication(Adw.Application):
         self.home_path = os.path.expanduser("~")
         self.current_path = self.home_path
         self.search_active = False
+
         self.last_click_time = 0
         self.selected_button = None
+
+        self.history = []
+        self.history_index = -1
+
         self.create_actions()
 
 
@@ -98,7 +109,6 @@ class OctopusApplication(Adw.Application):
 
             self.search_active = True
 
-
     def on_home(self, widget, _):
         """Callback for the app.home action."""
         self.update_file_list()
@@ -127,22 +137,28 @@ class OctopusApplication(Adw.Application):
         """Callback for the app.trash action."""
         self.update_file_list(os.path.expanduser("~/.local/share/Trash/files"))
 
-    # TODO!.
     def on_back(self, widget, _):
         """Callback for the app.back action."""
-        pass
+        if self.history_index > 0:
+            self.history_index -= 1
+            self.update_file_list(self.history[self.history_index], add_to_history=False)
 
-    # TODO!.
     def on_forward(self, widget, _):
         """Callback for the app.forward action."""
-        pass
+        if self.history_index < len(self.history) - 1:
+            self.history_index += 1
+            self.update_file_list(self.history[self.history_index], add_to_history=False)
 
 
     #
     def on_button_clicked(self, button, filename):
         current_time = time.time()
+        full_path = os.path.join(self.current_path, filename)
         if button == self.selected_button and current_time - self.last_click_time < 0.5:
-            self.update_file_list(os.path.join(self.current_path, filename))
+            if os.path.isdir(full_path):
+                self.update_file_list(full_path)
+            else:
+                open_file(full_path)
             self.selected_button = None
             self.last_click_time = 0
         else:
@@ -153,12 +169,18 @@ class OctopusApplication(Adw.Application):
 
             button.get_style_context().add_class("selected")
 
-    def update_file_list(self, directory=None):
+    def update_file_list(self, directory=None, add_to_history=True):
         """Updates the file list in the UI for the given directory."""
         directory = directory or self.home_path
         files = list_directory_files(directory)
 
         self.window.path_button.set_label(directory)
+
+        if add_to_history:
+            if self.history_index < len(self.history) - 1:
+                self.history = self.history[:self.history_index + 1]
+            self.history.append(directory)
+            self.history_index += 1
 
         if not files:
             status_page = Adw.StatusPage(title="Folder is empty", icon_name="folder-symbolic")

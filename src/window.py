@@ -29,7 +29,8 @@ class OctopusWindow(Adw.ApplicationWindow):
         "content_topbar_title",
         "list_view",
         "list_view_content",
-        "search_widget"
+        "search_widget",
+        "search_widget_entry"
     ]
 
     for name in button_names + widget_names:
